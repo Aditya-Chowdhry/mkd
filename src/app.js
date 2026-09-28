@@ -4,6 +4,7 @@ import { markdown } from '@codemirror/lang-markdown';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { openSearchPanel } from '@codemirror/search';
 import { renderMarkdown } from './render.js';
+import { setupZoom } from './zoom.js';
 
 const $ = id => document.getElementById(id);
 const api = window.desktop;
@@ -17,6 +18,7 @@ let editor;
 let revision = 0;
 let toastTimeout;
 let observer;
+const zoom = setupZoom({ preview: $('preview'), editor: $('editor'), onChange: () => editor?.requestMeasure() });
 const editorTheme = new Compartment();
 let dark = localStorage.getItem('mkd-theme') === 'dark' || (!localStorage.getItem('mkd-theme') && matchMedia('(prefers-color-scheme: dark)').matches);
 let outlineVisible = localStorage.getItem('mkd-outline') !== 'hidden';
@@ -165,6 +167,7 @@ $('preview').addEventListener('click', event => {
 });
 api?.onDocument(applyDocument);
 api?.onCommand(name => {
+  if (zoom.command(name)) return;
   if (name === 'toggle-mode') setMode(!editing);
   if (name === 'toggle-outline') toggleOutline();
   if (name === 'find') { setMode(true); openSearchPanel(editor); }
@@ -174,6 +177,12 @@ api?.onCommand(name => {
 document.addEventListener('keydown', event => {
   if (!(isMac ? event.metaKey : event.ctrlKey) || event.altKey) return;
   const key = event.key.toLowerCase();
+  const zoomCommand = { '+': 'zoom-in', '=': 'zoom-in', '-': 'zoom-out', '0': 'zoom-reset' }[key];
+  if (zoomCommand) {
+    event.preventDefault(); event.stopPropagation();
+    zoom.command(zoomCommand);
+    return;
+  }
   if (!['e', 's', 'o', 'n', 'f', '\\'].includes(key)) return;
   event.preventDefault(); event.stopPropagation();
   if (key === 'e') setMode(!editing);

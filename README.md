@@ -45,6 +45,7 @@ The launcher prefers a packaged build in `release/`, then an installed macOS app
 - Mermaid diagrams inside fenced `mermaid` code blocks. Invalid diagrams display their source and an error without breaking the document.
 - Native open, save, and save-as dialogs, with prompts before discarding unsaved changes.
 - Clickable document outline, word count, reading time, and persistent light/dark themes.
+- Document zoom from 50% to 300%, with toolbar controls, keyboard shortcuts, and trackpad pinch or Ctrl-scroll in preview. The zoom level is remembered, and navigation stays the same size.
 - Local images resolved relative to the saved Markdown file. Web links open in the default browser; local document links can be opened using the Open dialog.
 - Plain UTF-8 files, with complete temporary-file writes before replacing saved files.
 
@@ -62,6 +63,8 @@ flowchart LR
 | Edit / Preview | ⌘E | Ctrl+E |
 | Find in Markdown | ⌘F | Ctrl+F |
 | Toggle outline | ⌘\\ | Ctrl+\\ |
+| Zoom in / out | ⌘+ / ⌘− | Ctrl++ / Ctrl+− |
+| Reset zoom | ⌘0 | Ctrl+0 |
 
 ## Build and test
 

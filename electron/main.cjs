@@ -123,7 +123,10 @@ function createMenu() {
     { label: 'View', submenu: [
       { label: 'Toggle Edit / Preview', accelerator: 'CmdOrCtrl+E', click: command('toggle-mode') },
       { label: 'Toggle Outline', accelerator: 'CmdOrCtrl+\\', click: command('toggle-outline') },
-      { type: 'separator' }, { role: 'resetZoom' }, { role: 'zoomIn' }, { role: 'zoomOut' },
+      { type: 'separator' },
+      { label: 'Zoom In', accelerator: 'CmdOrCtrl+Plus', click: command('zoom-in') },
+      { label: 'Zoom Out', accelerator: 'CmdOrCtrl+-', click: command('zoom-out') },
+      { label: 'Actual Size', accelerator: 'CmdOrCtrl+0', click: command('zoom-reset') },
       { type: 'separator' }, { role: 'togglefullscreen' },
     ] },
     { role: 'windowMenu' },

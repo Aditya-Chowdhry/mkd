@@ -200,3 +200,63 @@ test('opening a file recreates a closed macOS window', async () => {
   page = await nextWindow;
   await expect(page.locator('#preview h1')).toHaveText('Reopened from CLI');
 });
+
+test('preview zoom enlarges the document without resizing navigation or changing content', async () => {
+  const heading = page.locator('#preview h1');
+  const originalHeight = (await heading.boundingBox()).height;
+  const toolbarHeight = (await page.locator('.titlebar').boundingBox()).height;
+  const original = await page.evaluate(() => window.desktop.getDocument());
+  await page.getByRole('button', { name: 'Zoom in', exact: true }).click();
+  await expect(page.locator('#zoom-level')).toHaveText('110%');
+  expect((await heading.boundingBox()).height).toBeGreaterThan(originalHeight * 1.05);
+  expect((await page.locator('.titlebar').boundingBox()).height).toBe(toolbarHeight);
+  expect(await page.evaluate(() => window.desktop.getDocument())).toEqual(original);
+  await page.getByRole('button', { name: 'Reset zoom to 100%' }).click();
+  await expect(page.locator('#zoom-level')).toHaveText('100%');
+  expect((await heading.boundingBox()).height).toBeCloseTo(originalHeight, 0);
+});
+
+test('zoom shortcuts, menus, limits, and persistence work in preview and edit modes', async () => {
+  await page.keyboard.press(`${modifier}+=`);
+  await expect(page.locator('#zoom-level')).toHaveText('110%');
+  await page.keyboard.down(modifier);
+  await page.keyboard.press('+');
+  await page.keyboard.up(modifier);
+  await expect(page.locator('#zoom-level')).toHaveText('125%');
+  await app.evaluate(({ Menu }) => Menu.getApplicationMenu().items.find(item => item.label === 'View').submenu.items.find(item => item.label === 'Zoom In').click());
+  await expect(page.locator('#zoom-level')).toHaveText('150%');
+  await expect.poll(() => page.evaluate(() => localStorage.getItem('mkd-zoom'))).toBe('150');
+  await page.reload();
+  await expect(page.locator('#zoom-level')).toHaveText('150%');
+  await expect(page.locator('.diagram-canvas svg')).toBeVisible();
+  await page.screenshot({ path: 'test-results/preview-zoom.png', fullPage: true });
+  await page.getByRole('button', { name: 'Edit Markdown', exact: true }).click();
+  const before = await page.evaluate(() => window.desktop.getDocument());
+  await expect(page.locator('.cm-editor')).toHaveCSS('font-size', '19.5px');
+  await page.keyboard.press(`${modifier}+-`);
+  await expect(page.locator('#zoom-level')).toHaveText('125%');
+  await expect(page.locator('.cm-editor')).toHaveCSS('font-size', '16.25px');
+  expect(await page.evaluate(() => window.desktop.getDocument())).toEqual(before);
+  await page.keyboard.press(`${modifier}+0`);
+  await expect(page.locator('#zoom-level')).toHaveText('100%');
+  for (let count = 0; count < 15; count++) await page.keyboard.press(`${modifier}+=`);
+  await expect(page.locator('#zoom-level')).toHaveText('300%');
+  await expect(page.getByRole('button', { name: 'Zoom in', exact: true })).toBeDisabled();
+  for (let count = 0; count < 15; count++) await page.keyboard.press(`${modifier}+-`);
+  await expect(page.locator('#zoom-level')).toHaveText('50%');
+  await expect(page.getByRole('button', { name: 'Zoom out', exact: true })).toBeDisabled();
+});
+
+test('Ctrl-scroll zooms the preview while ordinary scrolling leaves zoom unchanged', async () => {
+  await page.locator('#preview').hover({ position: { x: 150, y: 120 } });
+  await page.mouse.wheel(0, 120);
+  await expect.poll(() => page.locator('#preview-scroll').evaluate(element => element.scrollTop)).toBeGreaterThan(0);
+  await expect(page.locator('#zoom-level')).toHaveText('100%');
+  await page.keyboard.down('Control');
+  await page.mouse.wheel(0, -60);
+  await page.keyboard.up('Control');
+  await expect.poll(() => page.locator('#zoom-level').textContent()).not.toBe('100%');
+  expect(Number((await page.locator('#zoom-level').textContent()).replace('%', ''))).toBeGreaterThan(100);
+  await page.keyboard.press(`${modifier}+0`);
+  await expect(page.locator('#zoom-level')).toHaveText('100%');
+});
