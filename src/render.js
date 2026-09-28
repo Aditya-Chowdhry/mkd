@@ -62,8 +62,8 @@ export async function renderMarkdown(root, source, { dark = false, baseURL = nul
         theme: 'base', fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
         flowchart: { htmlLabels: false, curve: 'basis', padding: 16 },
         themeVariables: {
-          primaryColor: dark ? '#393242' : '#f0ecf5', primaryTextColor: dark ? '#ddd5e8' : '#625572',
-          primaryBorderColor: dark ? '#726185' : '#c6bbd3', lineColor: dark ? '#8d809d' : '#afa3bd',
+          primaryColor: dark ? '#393242' : '#f0ecf5', primaryTextColor: dark ? '#f0e9fa' : '#443452',
+          primaryBorderColor: dark ? '#a18bb8' : '#8c799f', lineColor: dark ? '#b4a0ca' : '#77628e',
           secondaryColor: dark ? '#30343b' : '#f0f2ec', tertiaryColor: dark ? '#292a32' : '#f7f5ef',
           background: dark ? '#22232a' : '#fcfbf8', fontSize: '12px',
         },
