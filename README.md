@@ -2,6 +2,8 @@
 
 A preview-first Markdown desktop app for macOS, Windows, and Linux. Click **Edit** in the top right to switch to raw Markdown, and **Preview** to return to the reading view.
 
+![Mkd on macOS showing a Markdown preview, document outline, and Edit button](docs/mkd-preview.png)
+
 ## Run
 
 Requires Node.js 22+ and npm.
