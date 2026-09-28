@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' file: https: data:; font-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Mkd</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="titlebar">
+      <div class="brand" aria-label="Mkd"><span class="brand-icon">m<span>↓</span></span><span>Mkd<span class="brand-dot">.</span></span></div>
+      <div class="document-title"><span class="file-glyph" aria-hidden="true">▤</span><span id="filename">Untitled.md</span><span id="dirty-dot" class="dirty-dot" hidden title="Unsaved changes"></span></div>
+      <div class="title-actions">
+        <button id="save" class="icon-button" title="Save (⌘/Ctrl S)" aria-label="Save document"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12l4 4v12a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8M7 3v5h9"/></svg></button>
+        <span class="action-divider"></span>
+        <button id="mode-toggle" class="primary-button" aria-label="Edit Markdown"><svg viewBox="0 0 24 24"><path d="m16 3 5 5M4 20l5-1L21 7a2 2 0 0 0-5-5L4 14l-1 7Z"/></svg><span>Edit</span><kbd id="mode-shortcut">⌘ E</kbd></button>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <aside id="sidebar" class="sidebar" aria-label="Document navigation">
+        <div class="sidebar-top"><span class="eyebrow">WORKSPACE</span><button id="new" class="icon-button small" title="New document" aria-label="New document"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button></div>
+        <button id="open" class="open-button"><svg viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h5l2 3h7a2 2 0 0 1 2 2v2M3 7v12a2 2 0 0 0 2 2h14l3-11H8l-3 9"/></svg>Open a document<span>↗</span></button>
+        <div class="sidebar-rule"></div>
+        <div class="outline-label"><span class="eyebrow">ON THIS PAGE</span><span id="heading-count">0</span></div>
+        <nav id="outline" aria-label="Document outline"></nav>
+        <div class="sidebar-bottom"><div class="offline-dot"></div><span>Local files. Limitless ideas.</span></div>
+      </aside>
+
+      <main class="main">
+        <div class="document-toolbar">
+          <div><button id="outline-toggle" class="icon-button small" aria-label="Toggle outline" aria-expanded="true" title="Toggle outline"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg></button><span class="toolbar-divider"></span><span id="view-label">Reading view</span></div>
+          <div class="view-indicator"><span></span><span id="format-label">MARKDOWN</span></div>
+        </div>
+        <section id="preview-scroll" class="preview-scroll" aria-label="Markdown preview" tabindex="0"><article id="preview" class="markdown-body"></article></section>
+        <section id="editor-panel" class="editor-panel" aria-label="Markdown editor" hidden><div id="editor"></div></section>
+        <footer class="statusbar"><div><span id="save-status">Ready to write</span><span class="status-separator">·</span><span id="word-count">0 words</span><span class="status-separator">·</span><span id="read-time">1 min read</span></div><div><span id="mode-status">PREVIEW</span><span class="status-separator">·</span><span>UTF-8</span><button id="theme-toggle" class="icon-button small" aria-label="Switch to dark theme" title="Switch theme"><svg viewBox="0 0 24 24"><path d="M20.9 13a9 9 0 1 1-9.9-9.9A7 7 0 0 0 20.9 13Z"/></svg></button></div></footer>
+      </main>
+    </div>
+  </div>
+  <div id="toast" role="status" hidden></div>
+  <script src="app.js"></script>
+</body>
+</html>

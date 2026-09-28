@@ -1,0 +1,43 @@
+{
+  "name": "mkd",
+  "version": "1.0.0",
+  "description": "A quiet, preview-first Markdown editor with offline Mermaid diagrams.",
+  "author": "Mkd",
+  "license": "MIT",
+  "main": "electron/main.cjs",
+  "bin": { "mkd": "bin/mkd.cjs" },
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "start": "npm run build && electron .",
+    "test": "npm run test:cli && npm run build && playwright test",
+    "test:cli": "node --test tests/cli.test.cjs",
+    "pack": "npm run build && electron-builder --dir",
+    "dist": "npm run build && electron-builder"
+  },
+  "devDependencies": {
+    "dompurify": "^3.2.7",
+    "marked": "^16.3.0",
+    "mermaid": "^11.12.0",
+    "codemirror": "^6.0.2",
+    "@codemirror/state": "^6.7.6",
+    "@codemirror/search": "^6.7.2",
+    "@codemirror/lang-markdown": "^6.3.4",
+    "@codemirror/theme-one-dark": "^6.1.3",
+    "esbuild": "^0.25.10",
+    "@playwright/test": "^1.55.1",
+    "electron": "44.4.5",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "app.mkd.editor",
+    "productName": "Mkd",
+    "directories": { "output": "release" },
+    "files": ["dist/**/*", "!dist/**/*.map", "electron/**/*", "assets/icon.png", "package.json"],
+    "fileAssociations": [{ "ext": ["md", "markdown", "mdown"], "name": "Markdown document", "role": "Editor" }],
+    "mac": { "icon": "assets/icon.icns", "category": "public.app-category.productivity", "target": ["dmg", "zip"] },
+    "win": { "icon": "assets/icon.ico", "target": ["nsis"] },
+    "linux": { "icon": "assets/icon.png", "target": ["AppImage", "deb"], "category": "Office" }
+  }
+}
